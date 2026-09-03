@@ -1236,6 +1236,8 @@
     box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     color: var(--chalk);
   }
+  .copy-analysis-fab{ right:50px; }
+  .header > .eyebrow{ padding-right:76px; }
   .settings-card{
     background: var(--bg-card);
     border: 1px solid var(--line);
@@ -1272,6 +1274,7 @@
     font-family: 'Noto Sans KR', sans-serif;
   }
   .settings-text-input:focus{ outline:none; border-color: var(--plate); }
+  .settings-prompt-input{ min-height:120px; resize:vertical; line-height:1.6; font-size:16px; }
   .settings-toggle-row{
     display:flex;
     align-items:center;
@@ -1639,6 +1642,20 @@
     <div class="dash-divider"></div>
 
     <div class="dash-section">
+      <div class="dash-section-title">🤖 GPT 요청 문구</div>
+      <div class="settings-card">
+        <div class="settings-text-row">
+          <label for="analysisPromptInput">ChatGPT에게 요청할 내용</label>
+          <textarea id="analysisPromptInput" class="settings-text-input settings-prompt-input" rows="4" maxlength="2000" aria-describedby="analysisPromptHint"></textarea>
+        </div>
+        <button type="button" class="save-btn-compact" id="saveAnalysisPromptBtn">요청 문구 저장</button>
+        <div class="backup-hint" id="analysisPromptHint">저장한 문구 뒤에 운동·신체 기록 요약이 자동으로 붙어요. 비워서 저장하면 기본 문구로 돌아가요.</div>
+      </div>
+    </div>
+
+    <div class="dash-divider"></div>
+
+    <div class="dash-section">
       <div class="dash-section-title">💾 데이터 백업</div>
       <div class="backup-row">
         <button class="backup-btn" id="exportBtn">⬇️ 내보내기</button>
@@ -1667,6 +1684,7 @@
 </section>
 
 <button class="settings-fab" id="settingsBtn" title="설정" aria-label="설정 열기">⚙️</button>
+<button class="settings-fab copy-analysis-fab" id="quickCopyAnalysisBtn" type="button" title="ChatGPT 전달 메시지 복사" aria-label="ChatGPT 전달 메시지 복사">🤖</button>
 
 <!-- ============ 하단 고정 탭 ============ -->
 <nav class="bottom-tabs" aria-label="주요 메뉴">
@@ -1949,6 +1967,7 @@ function formatDateLabelFor(dateStr){
 }
 
 // ===== 앱 설정 =====
+const DEFAULT_ANALYSIS_PROMPT = '아래 운동 기록을 간단히 분석해서 다음 운동 추천, 부족한 부위, 개선점만 알려줘.';
 let appSettings = {
   goalStrength: 5,
   goalCardio: 5,
@@ -1956,8 +1975,15 @@ let appSettings = {
   soundEnabled: true,
   vibrationEnabled: true,
   headerEyebrow: 'Push · Pull · Legs',
-  headerGreeting: '👋 안녕하세요'
+  headerGreeting: '👋 안녕하세요',
+  analysisPrompt: DEFAULT_ANALYSIS_PROMPT
 };
+
+function getAnalysisPrompt(){
+  return typeof appSettings.analysisPrompt === 'string'
+    ? appSettings.analysisPrompt.trim() || DEFAULT_ANALYSIS_PROMPT
+    : DEFAULT_ANALYSIS_PROMPT;
+}
 
 function loadSettingsFromStorage(){
   try{
@@ -3581,7 +3607,7 @@ async function copyAnalysisMessage(){
       .map(day => `${ROUTINE[day].label} ${dayCounts[day]}회`)
       .join(', ') || '기록 없음';
     const lines = [
-      '아래 운동 기록을 간단히 분석해서 다음 운동 추천, 부족한 부위, 개선점만 알려줘.', '',
+      getAnalysisPrompt(), '',
       `[목표] 근력 주 ${appSettings.goalStrength}회 / 유산소 주 ${appSettings.goalCardio}회`,
       `[최근 4주 부위별 횟수] ${frequency}`
     ];
@@ -3687,6 +3713,7 @@ async function importBackupFile(file){
 
 document.getElementById('exportBtn').addEventListener('click', exportBackup);
 document.getElementById('exportAnalysisBtn').addEventListener('click', copyAnalysisMessage);
+document.getElementById('quickCopyAnalysisBtn').addEventListener('click', copyAnalysisMessage);
 document.getElementById('importBtn').addEventListener('click', () => {
   document.getElementById('importFileInput').click();
 });
@@ -4750,6 +4777,7 @@ function setSwitchState(id, on){
 }
 
 function loadSettingsPage(){
+  document.getElementById('analysisPromptInput').value = getAnalysisPrompt();
   document.getElementById('headerEyebrowInput').value = appSettings.headerEyebrow;
   document.getElementById('headerGreetingInput').value = appSettings.headerGreeting;
   document.getElementById('goalStrengthInput').value = appSettings.goalStrength;
@@ -4780,6 +4808,21 @@ document.getElementById('saveHeaderTextBtn').addEventListener('click', () => {
   document.getElementById('headerEyebrowInput').value = appSettings.headerEyebrow;
   document.getElementById('headerGreetingInput').value = appSettings.headerGreeting;
   showToast('문구가 저장됐어요 ✏️');
+});
+
+document.getElementById('saveAnalysisPromptBtn').addEventListener('click', () => {
+  const input = document.getElementById('analysisPromptInput');
+  const previousPrompt = appSettings.analysisPrompt;
+  appSettings.analysisPrompt = input.value.trim() || DEFAULT_ANALYSIS_PROMPT;
+  try{
+    saveSettingsToStorage();
+    input.value = getAnalysisPrompt();
+    showToast('GPT 요청 문구가 저장됐어요 🤖');
+  }catch(e){
+    appSettings.analysisPrompt = previousPrompt;
+    console.error('GPT 요청 문구 저장 실패', e);
+    showToast('문구를 저장하지 못했어요. 다시 시도해주세요');
+  }
 });
 
 document.getElementById('soundToggle').addEventListener('click', () => {
