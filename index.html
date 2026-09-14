@@ -1249,6 +1249,37 @@
   }
 
   /* 설정 페이지 */
+  #pageSettings .settings-accordion > .dash-section-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    min-height:42px;
+    padding:0 4px;
+    margin-bottom:0;
+    cursor:pointer;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+  }
+  #pageSettings .settings-accordion > .dash-section-title::after{
+    content:'＋';
+    flex:0 0 auto;
+    color:var(--chalk-dim);
+    font-family:'Noto Sans KR',sans-serif;
+    font-size:17px;
+    font-weight:400;
+  }
+  #pageSettings .settings-accordion:not(.collapsed) > .dash-section-title{
+    margin-bottom:8px;
+  }
+  #pageSettings .settings-accordion:not(.collapsed) > .dash-section-title::after{ content:'−'; color:var(--plate); }
+  #pageSettings .settings-accordion.collapsed > :not(.dash-section-title){ display:none !important; }
+  #pageSettings .settings-accordion > .dash-section-title:focus-visible{
+    outline:2px solid var(--plate);
+    outline-offset:2px;
+    border-radius:6px;
+  }
+  #pageSettings .dash-divider{ margin:4px 0; }
   .settings-fab{
     position: fixed;
     top: calc(9px + env(safe-area-inset-top, 0px));
@@ -1872,6 +1903,7 @@ const ROUTINE = {
       { name: '디클라인 덤벨프레스', nameEn: 'Decline Dumbbell Press', target: '3세트 x 10회', icon: 'dumbbell' },
       { name: '체스트 딥 머신', nameEn: 'Chest Dip Machine', target: '3세트 x 10-12회', icon: 'machine' },
       { name: '덤벨 스퀴즈 프레스', nameEn: 'Dumbbell Squeeze Press', target: '3세트 x 12회', icon: 'dumbbell' },
+      { name: '인클라인 체스트 프레스', nameEn: 'Incline Chest Press', target: '직접 추가', fields: ['weight','reps'], icon: 'machine' },
     ]
   },
   back: {
@@ -1893,6 +1925,10 @@ const ROUTINE = {
       { name: '원암 덤벨로우', nameEn: 'One-Arm Dumbbell Row', target: '3세트 x 10회(편측)', icon: 'dumbbell' },
       { name: '와이드그립 케이블 로우', nameEn: 'Wide-Grip Cable Row', target: '3세트 x 10-12회', icon: 'cable' },
       { name: '굿모닝', nameEn: 'Good Morning', target: '3세트 x 10회', icon: 'barbell' },
+      { name: '하이 로우', nameEn: 'High Row', target: '직접 추가', icon: 'custom' },
+      { name: '윈 암 시티드 로우', nameEn: 'One Arm Seated Row', target: '직접 추가', icon: 'custom' },
+      { name: '어시스트 친업', nameEn: 'Assisted Chin-up', target: '직접 추가', fields: ['weight','reps'], icon: 'machine' },
+      { name: '클로즈그립 랫풀다운', nameEn: 'Close-Grip Lat Pulldown', target: '직접 추가', fields: ['weight','reps'], icon: 'machine' },
     ]
   },
   shoulder: {
@@ -1935,6 +1971,9 @@ const ROUTINE = {
       { name: '벤치 딥스', nameEn: 'Bench Dips', target: '3세트 x 12회', icon: 'bodyweight' },
       { name: '클로즈그립 벤치프레스', nameEn: 'Close-Grip Bench Press', target: '3세트 x 8-10회', icon: 'barbell' },
       { name: '리버스 컬', nameEn: 'Reverse Curl', target: '3세트 x 12회', icon: 'barbell' },
+      { name: '오버헤드 익스텐션', nameEn: 'Overhead Extension', target: '직접 추가', icon: 'custom' },
+      { name: '케이블 푸시다운', nameEn: 'Cable Pushdown', target: '직접 추가', fields: ['weight','reps'], icon: 'cable' },
+      { name: '딥스', nameEn: 'Dips', target: '직접 추가', fields: ['weight','reps'], icon: 'bodyweight' },
     ]
   },
   leg: {
@@ -1950,6 +1989,17 @@ const ROUTINE = {
       { name: '힙쓰러스트', nameEn: 'Hip Thrust', target: '3세트 x 10-12회', icon: 'barbell' },
       { name: '카프레이즈', nameEn: 'Calf Raise', target: '3세트 x 15회', icon: 'machine' },
       { name: '사이드 힙 어브덕션', nameEn: 'Side Hip Abduction', target: '3세트 x 15회', icon: 'machine' },
+      { name: '스탠딩 아웃타이', nameEn: 'Standing Out Thigh', target: '직접 추가', icon: 'custom' },
+      { name: '스탠딩 힙 쓰러스트', nameEn: 'Standing Hip Thrust', target: '직접 추가', icon: 'custom' },
+      { name: '글러트', nameEn: 'Glute', target: '직접 추가', icon: 'custom' },
+      { name: '힙 어브덕션', nameEn: 'Hip Abduction', target: '직접 추가', icon: 'custom' },
+      { name: '힙 어덕션', nameEn: 'Hip Adduction', target: '직접 추가', icon: 'custom' },
+      { name: '핵 스쿼트', nameEn: 'Hack Squat', target: '직접 추가', fields: ['weight','reps'], icon: 'machine' },
+      { name: '시티드 레그 컬', nameEn: 'Seated Leg Curl', target: '직접 추가', fields: ['weight','reps'], icon: 'machine' },
+      { name: '워킹 런지', nameEn: 'Walking Lunge', target: '직접 추가', fields: ['weight','reps'], icon: 'dumbbell' },
+      { name: '케이블 글루트 킥백', nameEn: 'Cable Glute Kickback', target: '직접 추가', fields: ['weight','reps'], icon: 'cable' },
+      { name: '싱글 레그 덤벨 루마니안 데드리프트', nameEn: 'Single-Leg Dumbbell Romanian Deadlift', target: '직접 추가', fields: ['weight','reps'], icon: 'dumbbell' },
+      { name: '글루트 브릿지', nameEn: 'Glute Bridge', target: '직접 추가', fields: ['reps'], icon: 'bodyweight' },
     ]
   },
   abs: {
@@ -1965,6 +2015,12 @@ const ROUTINE = {
       { name: '케이블 크런치', nameEn: 'Cable Crunch', target: '3세트 x 15회', icon: 'cable', unit: 'reps' },
       { name: '바이시클 크런치', nameEn: 'Bicycle Crunch', target: '3세트 x 20회', icon: 'bodyweight', unit: 'reps' },
       { name: '로만체어 시트업', nameEn: 'Roman Chair Sit-up', target: '3세트 x 15회', icon: 'machine', unit: 'reps' },
+      { name: '트위스트 플랭크', nameEn: 'Twist Plank', target: '직접 추가', fields: ['time'], timeUnit: 'sec', icon: 'custom' },
+      { name: '할로우 바디 홀드', nameEn: 'Hollow Body Hold', target: '직접 추가', fields: ['time'], timeUnit: 'sec', icon: 'bodyweight' },
+      { name: '팔로프 프레스', nameEn: 'Pallof Press', target: '직접 추가', fields: ['reps'], icon: 'custom' },
+      { name: '덤벨 사이드 밴드', nameEn: 'Dumbbell Side Bend', target: '30개 x 3세트', fields: ['weight','reps'], icon: 'dumbbell' },
+      { name: '데드 버그', nameEn: 'Dead Bug', target: '직접 추가', fields: ['reps'], icon: 'bodyweight' },
+      { name: '리버스 크런치', nameEn: 'Reverse Crunch', target: '직접 추가', fields: ['reps'], icon: 'bodyweight' },
     ]
   },
   cardio: {
@@ -1984,6 +2040,32 @@ const ROUTINE = {
     ]
   }
 };
+
+const ROUTINE_CATALOG_VERSION = '2026-09-14-backup-catalog';
+
+function routineExerciseKey(name){
+  const key = String(name || '').toLowerCase().replace(/\s+/g, '');
+  const aliases = {
+    '아놀드프레스': '아놀드프레스',
+    '레그익스텐션': '레그익스텐션',
+    '아웃도어러닝': '야외러닝',
+    '체스트서포트로우': '체스트서포트로우',
+    '체스트서포트로우머신': '체스트서포트로우'
+  };
+  return aliases[key] || key;
+}
+
+function mergeRoutineWithCatalog(day, savedRoutine){
+  const merged = Array.isArray(savedRoutine) ? savedRoutine.map(ex => ({ ...ex })) : [];
+  const names = new Set(merged.map(ex => routineExerciseKey(ex && ex.name)));
+  ROUTINE[day].exercises.forEach(ex => {
+    const key = routineExerciseKey(ex.name);
+    if(names.has(key)) return;
+    merged.push({ ...ex });
+    names.add(key);
+  });
+  return merged;
+}
 
 let currentDay = 'chest';
 let currentData = {}; // { exerciseName: [{weight, reps, done}, ...] }
@@ -2197,13 +2279,26 @@ function restoreWorkoutDraft(date, day){
 function routineKey(day){ return `workout:routine:${day}`; }
 
 async function loadRoutine(day){
+  const defaults = ROUTINE[day].exercises.map(ex => ({...ex}));
+  const migrationKey = `workout:routineCatalogVersion:${day}`;
   try{
     const res = await storage.get(routineKey(day));
     if(res && res.value){
-      return JSON.parse(res.value);
+      const saved = JSON.parse(res.value);
+      if(localStorage.getItem(migrationKey) !== ROUTINE_CATALOG_VERSION){
+        const merged = mergeRoutineWithCatalog(day, saved);
+        try{ localStorage.setItem(migrationKey, ROUTINE_CATALOG_VERSION); }catch(e){}
+        if(merged.length !== saved.length){
+          try{ await storage.set(routineKey(day), JSON.stringify(merged)); }
+          catch(e){ console.warn('운동 목록 업데이트 저장 실패', e); }
+        }
+        return merged;
+      }
+      return saved;
     }
   }catch(e){}
-  return ROUTINE[day].exercises.map(ex => ({...ex}));
+  try{ localStorage.setItem(migrationKey, ROUTINE_CATALOG_VERSION); }catch(e){}
+  return defaults;
 }
 
 async function saveRoutine(day, routine){
@@ -5042,6 +5137,38 @@ document.getElementById('startWorkoutBtn').addEventListener('click', () => {
 window.addEventListener('pagehide', saveWorkoutDraft);
 
 // ===== 설정 페이지 =====
+function setSettingsAccordionOpen(section, open){
+  const title = Array.from(section.children).find(child => child.classList.contains('dash-section-title'));
+  if(!title) return;
+  section.classList.toggle('collapsed', !open);
+  title.setAttribute('aria-expanded', String(open));
+}
+
+function collapseSettingsAccordions(){
+  document.querySelectorAll('#pageSettings .settings-accordion').forEach(section => {
+    setSettingsAccordionOpen(section, false);
+  });
+}
+
+function initSettingsAccordions(){
+  document.querySelectorAll('#pageSettings .dash-section').forEach(section => {
+    const title = Array.from(section.children).find(child => child.classList.contains('dash-section-title'));
+    if(!title || section.classList.contains('settings-accordion')) return;
+    section.classList.add('settings-accordion');
+    title.setAttribute('role', 'button');
+    title.setAttribute('tabindex', '0');
+    title.setAttribute('aria-expanded', 'false');
+    const toggle = () => setSettingsAccordionOpen(section, section.classList.contains('collapsed'));
+    title.addEventListener('click', toggle);
+    title.addEventListener('keydown', e => {
+      if(e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      toggle();
+    });
+    setSettingsAccordionOpen(section, false);
+  });
+}
+
 function setSwitchState(id, on){
   const el = document.getElementById(id);
   el.dataset.on = on ? 'true' : 'false';
@@ -5062,6 +5189,7 @@ function loadSettingsPage(){
 
 document.getElementById('settingsBtn').addEventListener('click', () => {
   loadSettingsPage();
+  collapseSettingsAccordions();
   showPage('settings');
 });
 document.getElementById('settingsBackBtn').addEventListener('click', () => {
@@ -5437,6 +5565,7 @@ initFirebaseCloud();
 loadSettingsFromStorage();
 applyHeaderText();
 restoreRestTimer();
+initSettingsAccordions();
 document.getElementById('homeDateLabel').textContent = formatDateLabel();
 document.getElementById('streakLabel').textContent = 'GO 💪';
 document.getElementById('workoutDatePicker').value = todayKey();
